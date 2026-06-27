@@ -1,11 +1,15 @@
-"""Gold and buy/sell rules.
+"""Gold, buying seeds, and selling items.
 
-Pure logic, no pygame dependency - same reasoning as Inventory. This is
-the module to test first if you start tuning prices and want to make
-sure you didn't break "can't buy what you can't afford."
+Pure logic, no pygame dependency - same reasoning as Inventory. This
+is the module to test first if you start tuning prices and want to
+make sure you didn't break "can't buy what you can't afford."
+
+sell_item works against SELLABLES (crops + fish merged) rather than
+CROPS specifically, since both are sellable goods. buy_seed stays
+CROPS-only on purpose - fish aren't planted, so they have no seeds.
 """
 
-from game.config import CROPS, STARTING_GOLD
+from game.config import CROPS, SELLABLES, STARTING_GOLD
 
 
 class Economy:
@@ -33,11 +37,11 @@ class Economy:
         inventory.add_seed(crop_id)
         return True
 
-    def sell_crop(self, inventory, crop_id, amount=1):
-        crop = CROPS.get(crop_id)
-        if not crop:
+    def sell_item(self, inventory, item_id, amount=1):
+        data = SELLABLES.get(item_id)
+        if not data:
             return False
-        if not inventory.remove_crop(crop_id, amount):
+        if not inventory.remove_item(item_id, amount):
             return False
-        self.earn(crop["sell_price"] * amount)
+        self.earn(data["sell_price"] * amount)
         return True
