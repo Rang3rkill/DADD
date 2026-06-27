@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# pygbag's local web build/cache output (regenerated each time you run it)
+build/
+
+.DS_Store
